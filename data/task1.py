@@ -16,7 +16,7 @@ with open(r"..\data\Cost.json", encoding = "utf8") as f:
 with open(r"..\data\Coord.json", encoding = "utf8") as f:
     Coord = json.load(f)
 
-def dijkstra_task1(graph, start, end=None):
+def dijkstra_task1(graph, start, end):
     """Find all shortest paths from start node to a non-specific end, eg: each other node."""
     
     current_total_distances = {}    # dictionary of total distances so far

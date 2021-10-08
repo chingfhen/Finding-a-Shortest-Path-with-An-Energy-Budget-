@@ -70,7 +70,7 @@ def dijkstra_task1(graph, start, end=None):
         print(shortest_path[i], "->", end = '')
     print(shortest_path[-1], ".") 
     
-    # obtain the value in the estimtaed_total_distances dictionary, the ned node is the key
+    # obtain the value in the estimtaed_total_distances dictionary, the end node is the key
     print("Shortest distance:", estimated_total_distances[shortest_path[-1]],".")
     
     # calculate total energy

@@ -1,9 +1,9 @@
 import json
 import numpy as np
 import time
-
 import os 
-print(os.getcwd())
+
+
 # read data
 with open(r"..\data\G.json", encoding = "utf8") as f:
     G = json.load(f)
@@ -45,5 +45,8 @@ start = time.time()
 shortest = find_path(G, "1", "50", cost_func=distance_func, energy_func = energy_func, energy_budget = 287932)
 end = time.time()
 print("Task 2 results:")
-print(shortest)
+print("Shortest path: ", shortest.nodes)
+print("Shortest distance: ", shortest.distance)
+print("Total energy cost: ", shortest.energy)
 print("Time taken for task 2: ", end - start, "\n")
+

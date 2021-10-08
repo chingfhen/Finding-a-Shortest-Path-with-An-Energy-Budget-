@@ -52,15 +52,7 @@ def dijkstra_task1(graph, start, end=None):
                 estimated_total_distances[neighbour] = path_length
                 # add neighbour and current_node into dictionary
                 candidate_nodes[neighbour] = current_node    
-                
-    return candidate_nodes, estimated_total_distances
-    
-def dijkstra_shortest_path(graph, start, end):
-    """Find a shortest path from start node to the given end node,
-    output the list of nodes visited along the shortest path,
-    as well as the toal distances and total enegy costs."""
-    
-    candidate_nodes, estimated_total_distances = dijkstra_task1(graph, start, end)
+    # use candidate_nodes to generate shortest path                            
     shortest_path = []
     while True:
         # append the end node first

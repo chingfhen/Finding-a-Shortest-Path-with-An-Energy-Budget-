@@ -31,7 +31,7 @@ start_time = time.time()
 start = "1"
 end = "50"
 print("Task 1 results:")
-dijkstra_shortest_path(G, start, end)
+dijkstra_task1(G, start, end)
 end_time = time.time()
 print("Time taken for task 1:", end_time - start_time, "\n")
 

@@ -39,10 +39,14 @@ find_path
 def find_path(
     graph, s, d, cost_func, energy_func, heuristic_func=None, energy_budget=287932
 ):
-
-    predecessors = single_source_shortest_paths(
-        graph, s, d, cost_func, energy_func, heuristic_func, energy_budget
-    )
+    if heuristic_func:
+        predecessors = astar(
+            graph, s, d, cost_func, energy_func, heuristic_func, energy_budget
+        )
+    else:
+        predecessors = single_source_shortest_paths(
+            graph, s, d, cost_func, energy_func, heuristic_func, energy_budget
+        )
 
     return extract_shortest_path_from_predecessor_list(predecessors, d)
 
@@ -166,10 +170,7 @@ def single_source_shortest_paths(
     return predecessors
 
 
-def astar(
-    graph, s, d, cost_func, energy_func, heuristic_func=None, energy_budget=287932
-):
-
+def astar(graph, s, d, cost_func, energy_func, heuristic_func=None, energy_budget=287932):
     # optional - allows the algorithm to rerun multiple times
     graph = graph.copy()
 
@@ -183,33 +184,24 @@ def astar(
             s: 0}                               # Current known costs of paths from s to all nodes
         # (predecessor, edge_cost, edge_energy)
         predecessors = {s: (None, None, None)}
-        f_scores = {s: heuristic_func(s)}
-        # (cost_of_s_to_u, node)
-        visit_queue = [(0, s, 0)]
+        # f_scores = {s: heuristic_func(s)}
+        # (f_score of u, cost_of_s_to_u, node)
+        visit_queue = [(heuristic_func(s), 0, s)]
         # visited nodes - guaranteed with the lowest cost_of_s_to_u
         visited = set()
-
-        deepest_level = 0
-        lowest_f = float('inf')
 
         while visit_queue:
 
             # gets lowest cost_of_s_to_u
-            cost_of_s_to_u, u, u_level = heappop(visit_queue)
+            _, cost_of_s_to_u, u = heappop(visit_queue)
 
-            if u == d:                               # if u==d, the shortest path is found
+            if u == d:
+                # if u==d, the shortest path is found
                 break
 
             if u in visited:                           # visited nodes are guaranteed to be part of the shortest path
                 continue                               # so we don't visit again
             visited.add(u)
-
-            # use saved f_scores, dynamic programming
-            if u not in f_scores.keys():
-                f_scores[u] = cost_of_s_to_u + heuristic_func(u)
-
-            if f_scores[u] > lowest_f:
-                continue
 
             # get the neighbours
             neighbors = graph[u]
@@ -218,11 +210,6 @@ def astar(
 
             # sort neighbours based on heuristic
             neighbors = sort_neighbors(neighbors, heuristic_func)
-
-            # track deepest level reached in graph
-            if u_level + 1 > deepest_level:
-                lowest_f = float('inf')   # reset lowest f value
-                deepest_level = u_level + 1
 
             # Check each of u's neighboring nodes to see if we can update costs
             for v in neighbors:
@@ -235,16 +222,8 @@ def astar(
                 cost_of_s_to_u_plus_cost_of_e = cost_of_s_to_u + cost_of_u_to_v
 
                 # add "estimated" cost from v to d    ( f = g + h )
-                if v not in f_scores.keys():
-                    f_scores[v] = cost_of_s_to_u_plus_cost_of_e + \
-                        heuristic_func(v)
 
-                if f_scores[v] > lowest_f:
-                    continue
-
-                # if cost_of_s_to_u_plus_cost_of_e > cur_lowest_cost:
-                #     visited.add(v)
-                #     continue
+                f_score = cost_of_s_to_u_plus_cost_of_e + heuristic_func(v)
 
                 # If there are no existing costs, UPDATE.
                 # If the new cost found is lower, UPDATE.
@@ -255,10 +234,7 @@ def astar(
                     # push to queue
 
                     heappush(
-                        visit_queue, (cost_of_s_to_u_plus_cost_of_e, v, u_level+1))
-
-            # if u_level not in lowest_f.keys():
-            #     lowest_f[u_level+1] = cur_lowest_cost
+                        visit_queue, (f_score, cost_of_s_to_u_plus_cost_of_e, v))
 
         """
         following block of code:
@@ -268,6 +244,7 @@ def astar(
         """
         if energy_budget:
             if extract_energy_from_predecessor_list(predecessors, d) > energy_budget:
+                print('entering loop')
                 most_energy_intensive_edge = extract_most_energy_intensive_edge(
                     predecessors, d)
                 a, b = most_energy_intensive_edge.split(",")

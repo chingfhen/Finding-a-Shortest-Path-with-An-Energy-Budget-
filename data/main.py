@@ -26,11 +26,10 @@ def energy_func(u,v):
 TASK 1
 """
 from task1 import *
-
-start_time = time.time()
 start = "1"
 end = "50"
 print("Task 1 results:")
+start_time = time.time()
 dijkstra_task1(G, start, end)
 end_time = time.time()
 print("Time taken for task 1:", end_time - start_time, "\n")
@@ -45,7 +44,7 @@ start = time.time()
 shortest = find_path(G, "1", "50", cost_func=distance_func, energy_func = energy_func, energy_budget = 287932)
 end = time.time()
 print("Task 2 results:")
-print("Shortest path: ", shortest.nodes)
+print("Shortest path: ", "->".join(shortest.nodes))
 print("Shortest distance: ", shortest.distance)
 print("Total energy cost: ", shortest.energy)
 print("Time taken for task 2: ", end - start, "\n")

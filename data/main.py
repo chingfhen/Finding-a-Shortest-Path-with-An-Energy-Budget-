@@ -69,7 +69,7 @@ def heuristic_sl_distance(alpha, node1, node2="50"):
 
 start = time.time()
 shortest = find_path_astar(G, "1", "50", cost_func=distance_func, energy_func=energy_func,
-                           heuristic_func=heuristic_sl_distance, alpha=alpha, energy_budget=287932)
+                           heuristic_func=heuristic_sl_distance, alpha=1, energy_budget=287932)
 end = time.time()
 print("Task 3 results:")
 print("Shortest path: ", "->".join(shortest.nodes))
